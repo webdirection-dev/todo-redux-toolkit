@@ -1,65 +1,50 @@
-
-import {useState} from "react";
+import {useState, useEffect} from "react";
 import './App.css';
+
+import {useDispatch, useSelector} from "react-redux";
+import {addTodo, fetchTodos, addNewTodo} from "../../store/todoSlice";
 
 import TodoList from "../todoList";
 import InputField from "../inputField";
 
 function App() {
-    const [isTodos, setToDos] = useState([])
     const [isText, setText] = useState('')
+    const {status, error} = useSelector(state => state.reducerTodos)
 
-    const onAddTodo = () => {
-        if (isText.trim().length) {
-            setToDos([
-                ...isTodos,
-                {
-                    id: new Date().toISOString(),
-                    text: isText,
-                    compiled: false,
-                }
-            ])
-
-            setText('')
-        }
+    const dispatch = useDispatch()
+    const addTask = () => {
+        dispatch(addNewTodo(isText))
+        // dispatch(addTodo({isText: isText}))
+        setText('')
     }
 
-    const onRemoveTodo = (id) => {
-        setToDos(isTodos.filter(item => id !== item.id))
-    }
-
-    const onToggleTodoCompiled = (id) => {
-        setToDos(isTodos.map(item => {
-            if (id !== item.id) return item
-            return {
-                ...item,
-                compiled: !item.compiled
-            }
-        }))
-    }
+    // componentDidMount
+    //работа с асинчронным fetchTodos
+    useEffect(() => {
+        dispatch(fetchTodos())
+    }, [dispatch])
 
     return (
         <View
-            isTodos={isTodos}
             isText={isText}
             setText={setText}
 
-            onAddTodo={onAddTodo}
-            onRemoveTodo={onRemoveTodo}
-            onToggleTodoCompiled={onToggleTodoCompiled}
+            addTask={addTask}
+
+            status={status}
+            error={error}
         />
     )
 }
 
 const View = (props) => {
     const {
-        isTodos,
         isText,
         setText,
 
-        onAddTodo,
-        onRemoveTodo,
-        onToggleTodoCompiled,
+        addTask,
+        status,
+        error,
     } = props
 
     return(
@@ -67,14 +52,13 @@ const View = (props) => {
             <InputField
                 isText={isText}
                 setText={setText}
-                onAddTodo={onAddTodo}
+                addTask={addTask}
             />
 
-            <TodoList
-                isTodos={isTodos}
-                onRemoveTodo={onRemoveTodo}
-                onToggleTodoCompiled={onToggleTodoCompiled}
-            />
+            {status === 'loading' && <h2>Loading...</h2>}
+            {error && <h2>An error occurred: {error}</h2>}
+
+            <TodoList />
         </div>
     )
 }

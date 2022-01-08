@@ -1,20 +1,17 @@
-import TodoItem from "../todoItem";
+import {useSelector} from "react-redux" // доступ к State за значениями
 
-const TodoList = (props) => {
-    const {
-        isTodos,
-        onRemoveTodo,
-        onToggleTodoCompiled,
-    } = props
+import TodoItem from "../todoItem"
+
+const TodoList = () => {
+    // useSelector принимает функцию. Функция принимает Store он же State
+    const reducerTodos = useSelector(state => state.reducerTodos.todos) // из /store/index.js
 
     return(
         <ul>
             {
-                isTodos.map(item =>
+                reducerTodos.map(item =>
                     <TodoItem
                         key={item.id}
-                        onRemoveTodo={onRemoveTodo}
-                        onToggleTodoCompiled={onToggleTodoCompiled}
                         {...item}
                     />
                 )

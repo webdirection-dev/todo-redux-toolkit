@@ -2,7 +2,7 @@ const InputField = (props) => {
     const {
         isText = '',
         setText,
-        onAddTodo = Function.prototype
+        addTask = Function.prototype
     } = props
 
     return(
@@ -14,8 +14,7 @@ const InputField = (props) => {
             />
 
             <button
-                className='12'
-                onClick={onAddTodo}
+                onClick={addTask}
             >
                 Add Todo
             </button>
