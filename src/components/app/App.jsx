@@ -19,7 +19,7 @@ function App() {
     }
 
     // componentDidMount
-    //работа с асинчронным fetchTodos
+    //работа с асинхронным fetchTodos
     useEffect(() => {
         dispatch(fetchTodos())
     }, [dispatch])
